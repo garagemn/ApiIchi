@@ -16,6 +16,7 @@ class OrderStoreRequest extends FormRequest
         $rules = [
             'phone' => 'required|numeric',
             'type' => 'required|in:delivery,pickup',
+            'ebarimt' => 'required|in:personal,corporate',
             'items.*.partid' => 'required|integer|exists:wh_inventory_branches,id',
             'items.*.quantity' => 'required|integer|min:1',
         ];
@@ -27,6 +28,10 @@ class OrderStoreRequest extends FormRequest
         } elseif($this->input('type') === 'pickup') {
             $rules['pickupbranch'] = 'required|integer';
         }
+
+        if($this->input('ebarimt') === 'corporate') {
+            $rules['regnumber'] = 'required|numeric';
+        }
         return $rules;
     }
 
@@ -37,6 +42,9 @@ class OrderStoreRequest extends FormRequest
             'phone.integer' => 'Зөвхөн тоо байх ёстой',
             'type.required' => 'Захиалгын төрлөө сонгоно уу',
             'type.in' => 'Захиалгын төрөл delivery or pickup',
+            'ebarimt.required' => 'И-баримт авах төрлөө сонгоно уу',
+            'ebarimt.in' => 'Төрөл personal or corporate',
+            'regnumber.required' => 'Байгууллагын регистерээ оруулна уу',
             'pickupbranch.required' => 'Очиж авах салбараа сонгоно уу',
             'pickupbranch.integer' => 'Зөвхөн тоо байх ёстой',
             'items.required' => 'items дата байхгүй байна',

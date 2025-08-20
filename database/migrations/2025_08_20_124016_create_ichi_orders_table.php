@@ -15,6 +15,9 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->enum('type', ['delivery', 'pickup'])->default('delivery');
             $table->integer('phone');
+            $table->tinyInteger('ispaid')->default(0);
+            $table->enum('ebarimt', ['personal', 'company'])->default('personal');
+            $table->integer('regnumber')->nullable();
             $table->unsignedBigInteger('oneseller_id');
             $table->foreign('oneseller_id')->references('id')->on('ichi_onesellers')->onDelete('cascade');
             $table->unsignedBigInteger('city_id')->nullable();
