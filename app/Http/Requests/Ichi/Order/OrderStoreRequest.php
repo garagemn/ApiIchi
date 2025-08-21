@@ -22,7 +22,7 @@ class OrderStoreRequest extends FormRequest
         ];
         if($this->input('type') === 'delivery') {
             $rules['city'] = 'required|integer';
-            $rules['distict'] = 'required|integer';
+            $rules['district'] = 'required|integer';
             $rules['team'] = 'required|integer';
             $rules['address'] = 'required|string';
         } elseif($this->input('type') === 'pickup') {
@@ -42,6 +42,10 @@ class OrderStoreRequest extends FormRequest
             'phone.integer' => 'Зөвхөн тоо байх ёстой',
             'type.required' => 'Захиалгын төрлөө сонгоно уу',
             'type.in' => 'Захиалгын төрөл delivery or pickup',
+            'city.required' => 'Аймаг, хотоо сонгоно уу',
+            'district.required' => 'Сум, Дүүрэг сонгоно уу',
+            'team.required' => 'Баг, хороо сонгоно уу',
+            'address.required' => 'Дэлгэрэнгийн хаягаа оруулна уу',
             'ebarimt.required' => 'И-баримт авах төрлөө сонгоно уу',
             'ebarimt.in' => 'Төрөл personal or corporate',
             'regnumber.required' => 'Байгууллагын регистерээ оруулна уу',

@@ -20,8 +20,8 @@ class LoginController extends Controller
             return $this->sendError('Нэвтрэх нэр болон нууц үг буруу байна', '', 401);
         }
 
-        // JWTAuth::setToken($token);
-        // JWTAuth::invalidate(JWTAuth::getToken());
+        JWTAuth::setToken($token);
+        JWTAuth::invalidate(JWTAuth::getToken());
 
         $token = JWTAuth::fromUser(auth()->user());
 
@@ -29,6 +29,7 @@ class LoginController extends Controller
         $success['name'] = $user->name;
         $success['email'] = $user->email;
         $success['phone'] = $user->phone;
+        $success['fcm'] = $user->device?->fcm;
         $success['token'] = $token;
         $success['expirein'] = JWTAuth::factory()->getTTL() * 60;
         return $this->sendResponse($success, 'Амжилттай нэвтэрлээ');

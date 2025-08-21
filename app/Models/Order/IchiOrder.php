@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class IchiOrder extends Model
 {
+    public function details()
+    {
+        return $this->hasMany(IchiOrderDetail::class, 'ichi_order_id', 'id');
+    }
+
     public function city()
     {
         
