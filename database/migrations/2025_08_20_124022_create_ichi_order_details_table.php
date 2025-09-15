@@ -18,6 +18,9 @@ return new class extends Migration
             $table->integer('quantity');
             $table->double('price');
             $table->double('totalamount');
+            $table->string('platenumber')->nullable();
+            $table->unsignedBigInteger('carid')->nullable();
+            $table->foreign('carid')->references('id')->on('carengines')->onDelete('cascade');
             $table->unsignedBigInteger('ichi_order_id')->nullable();
             $table->foreign('ichi_order_id')->references('id')->on('ichi_orders')->onDelete('cascade');
             $table->timestamps();

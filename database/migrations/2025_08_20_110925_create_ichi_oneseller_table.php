@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id');
             $table->foreign('parent_id')->references('id')->on('ichi_onesellers')->onDelete('cascade');
             $table->tinyInteger('status')->default(1);
+            $table->integer('depth')->default(0);
             $table->timestamps();
         });
     }

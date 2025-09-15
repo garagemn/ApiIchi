@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('ichi_oneseller_points', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->double('point');
-            $table->unsignedBigInteger('ichi_order_id')->nullable();
-            $table->foreign('ichi_order_id')->references('id')->on('ichi_orders')->onDelete('cascade');
+            $table->unsignedBigInteger('ichi_order_detail_id');
+            $table->foreign('ichi_order_detail_id')->references('id')->on('ichi_order_details')->onDelete('cascade');
             $table->unsignedBigInteger('oneseller_id');
             $table->foreign('oneseller_id')->references('id')->on('ichi_onesellers')->onDelete('cascade');
             $table->timestamps();

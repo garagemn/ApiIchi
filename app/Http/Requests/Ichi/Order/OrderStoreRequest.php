@@ -16,6 +16,7 @@ class OrderStoreRequest extends FormRequest
         $rules = [
             'phone' => 'required|numeric',
             'type' => 'required|in:delivery,pickup',
+            'platenumber' => 'required|string',
             'ebarimt' => 'required|in:personal,corporate',
             'items.*.partid' => 'required|integer|exists:wh_inventory_branches,id',
             'items.*.quantity' => 'required|integer|min:1',
@@ -42,6 +43,8 @@ class OrderStoreRequest extends FormRequest
             'phone.integer' => 'Зөвхөн тоо байх ёстой',
             'type.required' => 'Захиалгын төрлөө сонгоно уу',
             'type.in' => 'Захиалгын төрөл delivery or pickup',
+            'platenumber.required' => 'Машины улсын дугаарыг оруулна уу',
+            'platenumber.string' => 'Текст төрөлтэй байх ёстой',
             'city.required' => 'Аймаг, хотоо сонгоно уу',
             'district.required' => 'Сум, Дүүрэг сонгоно уу',
             'team.required' => 'Баг, хороо сонгоно уу',
