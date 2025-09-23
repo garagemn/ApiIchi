@@ -77,7 +77,7 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             if($exception instanceof NotFoundHttpException) {
-                return $sendError('Not found model', '', 404);
+                return $sendError('Not found url', '', 404);
             }
 
             if($exception instanceof HttpException) {

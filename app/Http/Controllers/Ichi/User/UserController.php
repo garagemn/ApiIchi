@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Ichi\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Profile\SetfmcRequest;
+use App\Http\Resources\Oneseller\ChildsResource;
+use App\Http\Resources\Oneseller\ProfileResource;
 use App\Models\User;
 use App\Models\User\IchiOnesellerDevice;
+use App\Models\User\IchiOnesellerPoint;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -20,7 +24,23 @@ class UserController extends Controller
 
     public function index()
     {
+        $oneseller = User::withSum('points', 'point')->with(['branch' => function ($sql) {
+            $sql->select('id', 'name');
+        }])->with(['organization' => function ($sql) {
+            $sql->select('id', 'name');
+        }])->select('id', 'lastname', 'name', 'phone', 'organization_id', 'branch_id', 'parent_id')->withCount(['children'])->findOrFail(auth()->id());
+        return $this->sendResponse(ProfileResource::make($oneseller), '');
+    }
 
+    public function childs()
+    {
+        $descendants = DB::table('ichi_oneseller_closures as c')->join('ichi_onesellers as u', 'u.id', '=', 'c.descendant_id')
+        ->where('c.ancestor_id', auth()->id())->whereBetween('c.depth', [1, auth()->user()->depth])
+        ->select('u.id', 'u.name', 'u.lastname', 'u.phone', 'u.parent_id', 'c.depth')->get();
+        foreach ($descendants as $descendant) {
+            $descendant->points = $this->getpoint($descendant->id) ?? 0;
+        }
+        return $this->sendResponse(ChildsResource::collection($descendants), '');
     }
 
     public function userpoint()
@@ -45,5 +65,10 @@ class UserController extends Controller
             $userdevice->save();
             return $this->sendResponse('', 'Fcm token амжилттай хадгалагдлаа.');
         }
+    }
+
+    public function getpoint($id)
+    {
+        return IchiOnesellerPoint::where('oneseller_id', $id)->sum('point');
     }
 }

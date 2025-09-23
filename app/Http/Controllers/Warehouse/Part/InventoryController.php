@@ -21,12 +21,12 @@ class InventoryController extends Controller
     {
         $branchparts = WhInventoryBranch::where('branch_id', auth()->user()->branch_id)->where('status', 'active')->where(function($sql) use ($request) {
             if($request->get('vin')) {
-
+                
             }
 
-            if($request->get('partbrand')) {
+            if($request->get('brandno')) {
                 $sql->whereHas('part', function ($sql) use ($request) {
-                    $sql->where('brandno', $request->get('partbrand')); 
+                    $sql->where('brandno', $request->get('brandno')); 
                 });
             }
 
@@ -36,10 +36,24 @@ class InventoryController extends Controller
                 });
             }
 
-            if($request->get('carengine')) {
+            if($request->get('carid')) {
                 $sql->whereHas('part', function ($sql) use ($request) {
                     $sql->whereHas('linkedcars', function ($sql) use ($request) {
-                        $sql->where('carid', $request->get('carengine'));
+                        $sql->where('carid', $request->get('carid'));
+                    });
+                });
+            }
+            if($request->get('searchval')) {
+                $searchVal = str_replace(['-', ' ', '.', '--'], '', strtolower(trim($request->get('searchval'))));
+                $sql->whereHas('part', function ($sql) use ($searchVal) {
+                    $sql->where('fixedarticleno', 'LIKE', $searchVal . '%');
+                })->orWhereHas('part', function ($sql) use ($request) {
+                    $sql->whereHas('category', function ($sql) use ($request) {
+                        $sql->where('categoryname', 'LIKE', $request->get('searchval') . '%')->orWhere('name', 'LIKE', $request->get('searchval') . '%');
+                    });
+                })->orWhereHas('part', function ($sql) use ($searchVal) {
+                    $sql->whereHas('oemnumbers', function ($sql) use ($searchVal) {
+                        $sql->where('oemfixed', 'LIKE', $searchVal . '%');
                     });
                 });
             }
@@ -49,7 +63,7 @@ class InventoryController extends Controller
                 $sql->select('categorygroupid', 'categoryname', 'name');
             }]);
         }])->with(['inventory' => function ($sql) {
-            $sql->select('id');
+            $sql->select('id', 'point');
         }])->select('id', 'wh_inventory_id', 'articleid', 'branch_id', 'quantity', 'storeprice', 'wholesaleprice', 'issale', 'percentsale', 'storepricesale', 'sale_startdate', 'sale_enddate')
         ->paginate(20);
         $resourceData = BranchPartResource::collection($branchparts);

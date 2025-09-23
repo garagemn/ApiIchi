@@ -10,9 +10,15 @@ class CarengineResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'carid' => $this->carid,
+            'carname' => $this->carname,
             'manuid' => $this->manuid,
-            'name' => $this->manuname,
-            'imgurl' => $this->imgurl
+            'manuname' => $this->carbrand?->manuname ?? null,
+            'modelid' => $this->modelid,
+            'modelname' => $this->carmodel?->modelname ?? null,
+            'motorcode' => $this->carinfo?->motorcode ?? null,
+            'motortype' => $this->carinfo?->motortype ?? null,
+            'cylinder' => $this->carinfo?->cylinder ?? null,
         ];
     }
 }

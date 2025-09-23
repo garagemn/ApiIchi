@@ -17,8 +17,13 @@ class OrderResource extends JsonResource
             'ispaid' => $this->ispaid ? 'Төлөгдсөн' : 'Төлөгдөөгүй',
             'ebarimt' => $this->ebarimt(),
             'regnumber' => $this->regnumber,
-            'details' => OrderDetailResource::collection($this->details),
             'pickupbranch' => $this->branch?->name ?? null,
+            'partcount' => $this->details->sum('quantity'),
+            'totalamount' => $this->details->sum('totalamount'),
+            'orderdate' => $this->created_at?->format('Y-m-d'),
+            'details' => $this->when($request->routeIs('order.detail'), function() {
+                return OrderDetailResource::collection($this->details);
+            }),
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models\Order;
 
+use App\Models\Authserver\Branch;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,6 +31,11 @@ class IchiOrder extends Model
     public function oneseller()
     {
         return $this->belongsTo(User::class, 'oneseller_id', 'id');
+    }
+
+    public function branch()
+    {
+        return $this->setConnection('authdb')->belongsTo(Branch::class, 'branch_id', 'id');
     }
     
 }
