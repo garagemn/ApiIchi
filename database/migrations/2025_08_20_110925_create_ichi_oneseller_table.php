@@ -24,6 +24,8 @@ return new class extends Migration
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
             $table->unsignedBigInteger('parent_id');
             $table->foreign('parent_id')->references('id')->on('ichi_onesellers')->onDelete('cascade');
+            $table->unsignedBigInteger('ichi_oneseller_rank_id')->nullable();
+            $table->foreign('ichi_oneseller_rank_id')->references('id')->on('ichi_oneseller_ranks')->onDelete('cascade');
             $table->tinyInteger('status')->default(1);
             $table->integer('depth')->default(0);
             $table->timestamps();
