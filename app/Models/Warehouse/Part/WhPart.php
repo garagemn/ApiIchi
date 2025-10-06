@@ -17,6 +17,15 @@ class WhPart extends Model
         return $this->hasMany(WhPartAttribute::class, 'articleid', 'articleid');
     }
 
+    public function isfilterattributes()
+    {
+        return $this->hasMany(WhPartAttribute::class, 'articleid', 'articleid')->where(function($sql) {
+            $sql->whereHas('attrname', function($query) {
+                $query->where('isfilter', 'active')->where('status', 'active');
+            });
+        });
+    }
+
     public function linkedcars()
     {
         return $this->hasMany(WhPartlinkedcar::class, 'articleid', 'articleid');

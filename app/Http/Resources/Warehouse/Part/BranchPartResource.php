@@ -14,6 +14,7 @@ class BranchPartResource extends JsonResource
             'articleno' => $this->part?->articleno ?? null,
             'category' => $this->part?->category?->name ?? $this->part?->category?->categoryname,
             'brandname' => $this->part?->brandname,
+            'image' => $this->part?->notframes?->first()?->imgurl100 ?? null,
             'quantity' => $this->quantity ? 'Үлдэгдэлтэй' : 'Дууссан',
             'wholeprice' => $this->wholesaleprice,
             'price' => $this->storeprice,
@@ -27,7 +28,8 @@ class BranchPartResource extends JsonResource
                     return $this->storepricesale;
                 }
             }),
-            'point' => $this->point
+            'point' => $this->point,
+            // 'attributes' => AttributeResource::collection($this->isfilterattributes)
         ];
     }
 

@@ -61,11 +61,20 @@ class InventoryController extends Controller
             $sql->select('articleid', 'articleno', 'categorygroupid', 'brandname', 'genericarticleid');
             $sql->with(['category' => function ($sql) {
                 $sql->select('categorygroupid', 'categoryname', 'name');
+            }])->with(['isfilterattributes' => function ($sql) {
+                $sql->select('attrid', 'attrvalueid', 'articleid')->with(['attrname' => function ($sql) {
+                    $sql->select('attrid', 'attrname', 'name');
+                }])->with(['attrvalue' => function ($sql) { 
+                    $sql->select('attrvalueid', 'attrvalue', 'name', 'articleid', 'attrunit');
+                }]);
+            }])->with(['notframes' => function ($sql) {
+                $sql->select('articleid', 'imgurl100');
             }]);
         }])->with(['inventory' => function ($sql) {
             $sql->select('id', 'point');
         }])->select('id', 'wh_inventory_id', 'articleid', 'branch_id', 'quantity', 'storeprice', 'wholesaleprice', 'issale', 'percentsale', 'storepricesale', 'sale_startdate', 'sale_enddate')
         ->paginate(20);
+        // \Log::info($branchparts);
         $resourceData = BranchPartResource::collection($branchparts);
         return $this->sendResponsePagination($branchparts, $resourceData, '');
     }
