@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->tinyInteger('status')->default(1);
             $table->double('point')->nullable();
+            $table->unsignedBigInteger('organization_id');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->timestamps();
         });
     }

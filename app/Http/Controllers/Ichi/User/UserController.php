@@ -28,7 +28,9 @@ class UserController extends Controller
             $sql->select('id', 'name');
         }])->with(['organization' => function ($sql) {
             $sql->select('id', 'name');
-        }])->select('id', 'lastname', 'name', 'phone', 'organization_id', 'branch_id', 'parent_id')->withCount(['children'])->findOrFail(auth()->id());
+        }])->with(['rank' => function ($sql) { $sql->select('id', 'name'); }])
+        ->select('id', 'lastname', 'name', 'phone', 'organization_id', 'branch_id', 'parent_id', 'ichi_oneseller_rank_id')
+        ->withCount(['children'])->findOrFail(auth()->id());
         return $this->sendResponse(ProfileResource::make($oneseller), '');
     }
 

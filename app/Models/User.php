@@ -10,6 +10,7 @@ use App\Models\Order\IchiOrder;
 use App\Models\User\IchiOnesellerClosure;
 use App\Models\User\IchiOnesellerDevice;
 use App\Models\User\IchiOnesellerPoint;
+use App\Models\User\IchiOnesellerRank;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,6 +52,11 @@ class User extends Authenticatable implements JWTSubject
     public function descendants()
     {
         return $this->hasManyThrough(User::class, IchiOnesellerClosure::class, 'ancestor_id', 'id', 'id', 'descendant_id')->where('ichi_oneseller_closures.depth', '>', 0);
+    }
+
+    public function rank()
+    {
+        return $this->belongsTo(IchiOnesellerRank::class, 'ichi_onseller_rank_id', 'id');
     }
 
     public function points()

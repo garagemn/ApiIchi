@@ -14,7 +14,7 @@ class ProfileResource extends JsonResource
             'lastname' => $this->lastname,
             'name' => $this->name,
             'phone' => $this->phone,
-            'level' => $this->level ?? null,
+            'level' => $this->rank?->name ?? null,
             'points' => $this->points_sum_point ?? 0,
             'organization' => $this->organization?->name ?? null,
             'branch' => $this->branch?->name ?? null,
