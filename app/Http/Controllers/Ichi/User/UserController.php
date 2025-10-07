@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Profile\SetfmcRequest;
 use App\Http\Resources\Oneseller\ChildsResource;
 use App\Http\Resources\Oneseller\ProfileResource;
+use App\Http\Resources\Oneseller\WeekSaleAmountResource;
+use App\Models\Order\IchiOrderDetail;
 use App\Models\User;
 use App\Models\User\IchiOnesellerDevice;
 use App\Models\User\IchiOnesellerPoint;
 use App\Traits\ApiResponse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -72,5 +75,13 @@ class UserController extends Controller
     public function getpoint($id)
     {
         return IchiOnesellerPoint::where('oneseller_id', $id)->sum('point');
+    }
+
+    public function weeksale()
+    {
+        $totalamount = IchiOrderDetail::whereHas('order', function ($sql) {
+            $sql->where('oneseller_id', auth()->id())->where('ispaid', 1);
+        })->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('totalamount');
+        return $this->sendResponse(['weeksaleamount' => $totalamount], '');
     }
 }

@@ -27,7 +27,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', [UserController::class, 'index']);
         Route::get('/childs', [UserController::class, 'childs']);
         Route::post('/setfcm', [UserController::class, 'setfcm']);
-
+        Route::get('/weeksale', [UserController::class, 'weeksale']);
         Route::group(['prefix' => 'notification'], function () {
             Route::get('/', [NotificationController::class, 'index']);
         });
