@@ -5,6 +5,7 @@ use App\Http\Controllers\Ichi\Basket\BasketController;
 use App\Http\Controllers\Ichi\Order\OrderController;
 use App\Http\Controllers\Ichi\User\NotificationController;
 use App\Http\Controllers\Ichi\User\UserController;
+use App\Http\Controllers\Support\EbarimtController;
 use App\Http\Controllers\Support\LocationController;
 use App\Http\Controllers\Warehouse\Car\CarbrandController;
 use App\Http\Controllers\Warehouse\Car\CarengineController;
@@ -53,6 +54,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::group(['prefix' => 'order'], function() {
         Route::get('/pickupbranch', [OrderController::class, 'pickupbranch'])->name('order.pickupbranches');
+        Route::get('/corporatename', [EbarimtController::class, 'index'])->name('order.corporatename');
         Route::get('/', [OrderController::class, 'index'])->name('order.index');
         Route::get('/{id}', [OrderController::class, 'detail'])->name('order.detail');
         Route::post('/create', [OrderController::class, 'store'])->name('order.store');

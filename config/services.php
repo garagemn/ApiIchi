@@ -35,4 +35,6 @@ return [
         ],
     ],
 
+    'ebarimt_server' => env('EBARIMT_SERVER'),
+
 ];
