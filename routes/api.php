@@ -52,8 +52,10 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::group(['prefix' => 'order'], function() {
+        Route::get('/pickupbranch', [OrderController::class, 'pickupbranch'])->name('order.pickupbranches');
         Route::get('/', [OrderController::class, 'index'])->name('order.index');
         Route::get('/{id}', [OrderController::class, 'detail'])->name('order.detail');
-        Route::post('/create', [OrderController::class, 'store']);
+        Route::post('/create', [OrderController::class, 'store'])->name('order.store');
     });
+    
 });

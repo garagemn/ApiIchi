@@ -26,6 +26,7 @@ class OrderStoreRequest extends FormRequest
             $rules['district'] = 'required|integer';
             $rules['team'] = 'required|integer';
             $rules['address'] = 'required|string';
+            $rules['deliveryamount'] = 'required|numeric';
         } elseif($this->input('type') === 'pickup') {
             $rules['pickupbranch'] = 'required|integer';
         }
@@ -49,6 +50,8 @@ class OrderStoreRequest extends FormRequest
             'district.required' => 'Сум, Дүүрэг сонгоно уу',
             'team.required' => 'Баг, хороо сонгоно уу',
             'address.required' => 'Дэлгэрэнгийн хаягаа оруулна уу',
+            'deliveryamount.required' => 'Хүргэлтийн дүн оруулна уу',
+            'deliveryamount.numeric' => 'Зөвхөн тоо байх ёстой',
             'ebarimt.required' => 'И-баримт авах төрлөө сонгоно уу',
             'ebarimt.in' => 'Төрөл personal or corporate',
             'regnumber.required' => 'Байгууллагын регистерээ оруулна уу',

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->enum('type', ['delivery', 'pickup'])->default('delivery');
             $table->integer('phone');
             $table->tinyInteger('ispaid')->default(0);
+            $table->double('deliveryamount')->nullable();
             $table->enum('ebarimt', ['personal', 'company'])->default('personal');
             $table->integer('regnumber')->nullable();
             $table->unsignedBigInteger('oneseller_id');

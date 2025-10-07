@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Ichi\Order;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Ichi\Order\OrderStoreRequest;
+use App\Http\Resources\Order\OrderBranchResource;
 use App\Http\Resources\Order\OrderResource;
+use App\Models\Authserver\Branch;
 use App\Models\Order\IchiOrder;
 use App\Models\Order\IchiOrderDetail;
 use App\Models\Warehouse\Part\WhInventoryBranch;
@@ -87,7 +89,7 @@ class OrderController extends Controller
                 $order->regnumber = $request->get('regnumber');
             }
             $order->oneseller_id = auth()->id();
-            
+            if($request->get('deliveryamount')) $order->deliveryamount = $request->get('deliveryamount');
             $order->save();
             $orderparts = $request->get('items');
             foreach($orderparts as $orderpart) {
@@ -114,5 +116,11 @@ class OrderController extends Controller
             DB::rollBack();
             return $this->sendError('Захиалга үүсгэхэд алдаа гарлаа', '', 200);
         }
+    }
+
+    public function pickupbranch()
+    {
+        $branches = Branch::where('organization_id', auth()->user()->organization_id)->where('status', 1)->select('id', 'name')->get();
+        return $this->sendResponse(OrderBranchResource::collection($branches), '');
     }
 }
