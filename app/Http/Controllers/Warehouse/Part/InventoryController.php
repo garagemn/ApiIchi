@@ -48,7 +48,7 @@ class InventoryController extends Controller
                     });
                 });
             })->with(['part' => function ($sql) {
-                $sql->select('articleid', 'articleno', 'categorygroupid', 'brandname', 'genericarticleid');
+                $sql->select('articleid', 'articleno', 'categorygroupid', 'brandname', 'brandno', 'genericarticleid');
                 $sql->with(['category' => function ($sql) {
                     $sql->select('categorygroupid', 'categoryname', 'name');
                 }])->with(['isfilterattributes' => function ($sql) {
@@ -59,6 +59,10 @@ class InventoryController extends Controller
                     }]);
                 }])->with(['notframes' => function ($sql) {
                     $sql->select('articleid', 'imgurl100');
+                }])->with(['partbrand' => function ($sql) {
+                    $sql->select('datasupplierid')->with(['logo' => function ($sql) {
+                        $sql->select('datasupplierid', 'imageurl100');
+                    }]);
                 }]);
             }])->with(['inventory' => function ($sql) {
                 $sql->select('id', 'point');

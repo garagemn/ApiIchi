@@ -14,6 +14,7 @@ class BranchPartResource extends JsonResource
             'articleno' => $this->part?->articleno ?? null,
             'category' => $this->part?->category?->name ?? $this->part?->category?->categoryname,
             'brandname' => $this->part?->brandname,
+            'brandimage' => $this->part?->partbrand?->logo?->imageurl100 ?? null,
             'image' => $this->part?->notframes?->first()?->imgurl100 ?? null,
             'quantity' => $this->quantity ? 'Үлдэгдэлтэй' : 'Дууссан',
             'wholeprice' => $this->wholesaleprice,

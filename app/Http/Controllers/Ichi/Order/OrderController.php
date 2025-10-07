@@ -57,6 +57,8 @@ class OrderController extends Controller
                     $sql->select('articleid', 'articleno', 'categorygroupid', 'brandname');
                     $sql->with(['category' => function ($sql) {
                         $sql->select('categorygroupid', 'categoryname', 'name');
+                    }])->with(['notframes' => function ($sql) {
+                        $sql->select('articleid', 'imgurl100');
                     }]);
                 }]);
             }]);
