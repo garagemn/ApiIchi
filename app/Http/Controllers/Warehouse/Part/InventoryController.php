@@ -19,31 +19,22 @@ class InventoryController extends Controller
 
     public function index(Request $request)
     {
-        $branchparts = WhInventoryBranch::where('branch_id', auth()->user()->branch_id)->where('status', 'active')->where(function($sql) use ($request) {
-            if($request->get('vin')) {
-                
-            }
-
-            if($request->get('brandno')) {
+        $branchparts = WhInventoryBranch::where('branch_id', auth()->user()->branch_id)->where('status', 'active')
+            ->when($request->get('brandno'), function ($sql) use ($request) {
                 $sql->whereHas('part', function ($sql) use ($request) {
-                    $sql->where('brandno', $request->get('brandno')); 
+                    $sql->where('brandno', $request->get('brandno'));
                 });
-            }
-
-            if($request->get('categoryid')) {
+            })->when($request->get('categoryid'), function ($sql) use ($request) {
                 $sql->whereHas('part', function ($sql) use ($request) {
                     $sql->where('categorygroupid', $request->get('categoryid'));
                 });
-            }
-
-            if($request->get('carid')) {
+            })->when($request->get('carid'), function ($sql) use ($request) {
                 $sql->whereHas('part', function ($sql) use ($request) {
                     $sql->whereHas('linkedcars', function ($sql) use ($request) {
                         $sql->where('carid', $request->get('carid'));
                     });
                 });
-            }
-            if($request->get('searchval')) {
+            })->when($request->get('searchval'), function ($sql) use ($request) {
                 $searchVal = str_replace(['-', ' ', '.', '--'], '', strtolower(trim($request->get('searchval'))));
                 $sql->whereHas('part', function ($sql) use ($searchVal) {
                     $sql->where('fixedarticleno', 'LIKE', $searchVal . '%');
@@ -56,25 +47,23 @@ class InventoryController extends Controller
                         $sql->where('oemfixed', 'LIKE', $searchVal . '%');
                     });
                 });
-            }
-        })->with(['part' => function ($sql) {
-            $sql->select('articleid', 'articleno', 'categorygroupid', 'brandname', 'genericarticleid');
-            $sql->with(['category' => function ($sql) {
-                $sql->select('categorygroupid', 'categoryname', 'name');
-            }])->with(['isfilterattributes' => function ($sql) {
-                $sql->select('attrid', 'attrvalueid', 'articleid')->with(['attrname' => function ($sql) {
-                    $sql->select('attrid', 'attrname', 'name');
-                }])->with(['attrvalue' => function ($sql) { 
-                    $sql->select('attrvalueid', 'attrvalue', 'name', 'articleid', 'attrunit');
+            })->with(['part' => function ($sql) {
+                $sql->select('articleid', 'articleno', 'categorygroupid', 'brandname', 'genericarticleid');
+                $sql->with(['category' => function ($sql) {
+                    $sql->select('categorygroupid', 'categoryname', 'name');
+                }])->with(['isfilterattributes' => function ($sql) {
+                    $sql->select('attrid', 'attrvalueid', 'articleid')->with(['attrname' => function ($sql) {
+                        $sql->select('attrid', 'attrname', 'name');
+                    }])->with(['attrvalue' => function ($sql) { 
+                        $sql->select('attrvalueid', 'attrvalue', 'name', 'articleid', 'attrunit');
+                    }]);
+                }])->with(['notframes' => function ($sql) {
+                    $sql->select('articleid', 'imgurl100');
                 }]);
-            }])->with(['notframes' => function ($sql) {
-                $sql->select('articleid', 'imgurl100');
-            }]);
-        }])->with(['inventory' => function ($sql) {
-            $sql->select('id', 'point');
-        }])->select('id', 'wh_inventory_id', 'articleid', 'branch_id', 'quantity', 'storeprice', 'wholesaleprice', 'issale', 'percentsale', 'storepricesale', 'sale_startdate', 'sale_enddate')
-        ->paginate(20);
-        // \Log::info($branchparts);
+            }])->with(['inventory' => function ($sql) {
+                $sql->select('id', 'point');
+            }])->select('id', 'wh_inventory_id', 'articleid', 'branch_id', 'quantity', 'storeprice', 'wholesaleprice', 'issale', 'percentsale', 'storepricesale', 'sale_startdate', 'sale_enddate')
+            ->paginate(20);
         $resourceData = BranchPartResource::collection($branchparts);
         return $this->sendResponsePagination($branchparts, $resourceData, '');
     }

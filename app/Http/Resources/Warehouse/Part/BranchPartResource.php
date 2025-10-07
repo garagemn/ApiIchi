@@ -29,7 +29,7 @@ class BranchPartResource extends JsonResource
                 }
             }),
             'point' => $this->point,
-            // 'attributes' => AttributeResource::collection($this->isfilterattributes)
+            'attributes' => $this->part?->isfilterattributes ? AttributeResource::collection($this->part?->isfilterattributes) : null,
         ];
     }
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\Ichi\Basket\BasketController;
 use App\Http\Controllers\Ichi\Order\OrderController;
+use App\Http\Controllers\Ichi\User\NotificationController;
 use App\Http\Controllers\Ichi\User\UserController;
 use App\Http\Controllers\Support\LocationController;
 use App\Http\Controllers\Warehouse\Car\CarbrandController;
@@ -26,6 +27,10 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', [UserController::class, 'index']);
         Route::get('/childs', [UserController::class, 'childs']);
         Route::post('/setfcm', [UserController::class, 'setfcm']);
+
+        Route::group(['prefix' => 'notification'], function () {
+            Route::get('/', [NotificationController::class, 'index']);
+        });
     });
 
     Route::get('/category', [CategoryController::class, 'index']);
