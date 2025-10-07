@@ -16,7 +16,7 @@ class OrderStoreRequest extends FormRequest
         $rules = [
             'phone' => 'required|numeric',
             'type' => 'required|in:delivery,pickup',
-            'platenumber' => 'required|string',
+            'platenumber' => 'nullable|string',
             'ebarimt' => 'required|in:personal,corporate',
             'items.*.partid' => 'required|integer|exists:wh_inventory_branches,id',
             'items.*.quantity' => 'required|integer|min:1',

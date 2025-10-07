@@ -68,6 +68,8 @@ class OrderController extends Controller
 
     public function store(OrderStoreRequest $request)
     {
+        $partsIds = [];
+        
         // \Log::info($request->all());
         DB::beginTransaction();
         try {
