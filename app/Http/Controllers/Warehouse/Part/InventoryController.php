@@ -67,7 +67,7 @@ class InventoryController extends Controller
             }])->with(['inventory' => function ($sql) {
                 $sql->select('id', 'point');
             }])->select('id', 'wh_inventory_id', 'articleid', 'branch_id', 'quantity', 'storeprice', 'wholesaleprice', 'issale', 'percentsale', 'storepricesale', 'sale_startdate', 'sale_enddate')
-            ->paginate(20);
+            ->orderBy('quantity', 'DESC')->paginate(20);
         $resourceData = BranchPartResource::collection($branchparts);
         return $this->sendResponsePagination($branchparts, $resourceData, '');
     }
