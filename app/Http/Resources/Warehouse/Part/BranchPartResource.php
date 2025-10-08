@@ -11,6 +11,7 @@ class BranchPartResource extends JsonResource
     {
         return [
             'partid' => $this->id,
+            'articleid' => $this->articleid,
             'articleno' => $this->part?->articleno ?? null,
             'category' => $this->part?->category?->name ?? $this->part?->category?->categoryname,
             'brandname' => $this->part?->brandname,

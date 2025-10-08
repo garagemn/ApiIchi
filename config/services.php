@@ -35,6 +35,9 @@ return [
         ],
     ],
 
+    'khur_server' => env('KHUR_SERVER'),
+    'khur_username' => env('KHUR_USERNAME'),
+    'khur_pwd' => env('KHUR_PWD'),
     'ebarimt_server' => env('EBARIMT_SERVER'),
 
 ];
