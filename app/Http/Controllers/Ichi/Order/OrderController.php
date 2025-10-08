@@ -54,11 +54,15 @@ class OrderController extends Controller
             $sql->select('id', 'wh_inventory_branch_id', 'quantity', 'price', 'totalamount', 'ichi_order_id');
             $sql->with(['branchpart' => function ($sql) {
                 $sql->select('id', 'articleid')->with(['part' => function ($sql) {
-                    $sql->select('articleid', 'articleno', 'categorygroupid', 'brandname');
+                    $sql->select('articleid', 'articleno', 'brandno', 'categorygroupid', 'brandname');
                     $sql->with(['category' => function ($sql) {
                         $sql->select('categorygroupid', 'categoryname', 'name');
                     }])->with(['notframes' => function ($sql) {
                         $sql->select('articleid', 'imgurl100');
+                    }])->with(['partbrand' => function ($sql) {
+                        $sql->select('datasupplierid')->with(['logo' => function ($sql) {
+                            $sql->select('datasupplierid', 'imageurl100');
+                        }]);
                     }]);
                 }]);
             }]);
