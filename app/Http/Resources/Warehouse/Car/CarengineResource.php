@@ -19,6 +19,9 @@ class CarengineResource extends JsonResource
             'motorcode' => $this->carinfo?->motorcode ?? null,
             'motortype' => $this->carinfo?->motortype ?? null,
             'cylinder' => $this->carinfo?->cylinder ?? null,
+            'platenumber' => null,
+            'islandnumber' => null,
+            'buildyear' => null,
         ];
     }
 }

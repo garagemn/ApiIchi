@@ -37,8 +37,22 @@ class KhurController extends Controller
         $car->model = $carinfo->model;
 
         if($carinfo->manufacturer === 'TOYOTA' || $carinfo->manufacturer === 'LEXUS') {
-            $hasKatashiki = VinKatashiki::where('vin', strtoupper($carinfo->islandnumber))->with(['katashikicar'])->first();
-            if($hasKatashiki && $hasKatashiki->katashikicar) $car->carid = $hasKatashiki->katashikicar?->carid;
+            $hasKatashiki = VinKatashiki::where('vin', strtoupper($carinfo->islandnumber))->with(['katashikicar' => function ($sql) {
+                $sql->select('katashiki', 'carid')->with(['carengine' => function ($sql) {
+                    $sql->select('carid', 'carname', 'modelid', 'manuid')->with(['carinfo' => function ($sql) {
+                        $sql->select('carid', 'motorcode', 'cylinder', 'ccmtech', 'fueltype');
+                    }]);
+                }]);
+            }])->first();
+            if($hasKatashiki && $hasKatashiki->katashikicar) {
+                $car->carid = $hasKatashiki->katashikicar?->carid;
+                $car->manuid = $hasKatashiki->katashikicar?->carengine?->manuid;
+                $car->carname = $hasKatashiki->katashikicar?->carengine?->carname;
+                $car->modelid = $hasKatashiki->katashikicar?->carengine?->modelid;
+                $car->motorcode = $hasKatashiki->katashikicar?->carengine?->carinfo?->motorcode;
+                $car->motortype = $hasKatashiki->katashikicar?->carengine?->carinfo?->motortype;
+                $car->cylinder = $hasKatashiki->katashikicar?->carengine?->carinfo?->cylinder;
+            } 
         } else {
             $hasCarvin = Carvin::where('vin', $carinfo->islandnumber)->select('carid')->first();
             if($hasCarvin) $car->carid = $hasCarvin->carid;
@@ -60,8 +74,22 @@ class KhurController extends Controller
         $car->model = $carinfo->model;
 
         if($carinfo->manufacturer === 'TOYOTA' || $carinfo->manufacturer === 'LEXUS') {
-            $hasKatashiki = VinKatashiki::where('vin', strtoupper($carinfo->islandnumber))->with(['katashikicar'])->first();
-            if($hasKatashiki && $hasKatashiki->katashikicar) $car->carid = $hasKatashiki->katashikicar?->carid;
+            $hasKatashiki = VinKatashiki::where('vin', strtoupper($carinfo->islandnumber))->with(['katashikicar' => function ($sql) {
+                $sql->select('katashiki', 'carid')->with(['carengine' => function ($sql) {
+                    $sql->select('carid', 'carname', 'modelid', 'manuid')->with(['carinfo' => function ($sql) {
+                        $sql->select('carid', 'motorcode', 'cylinder', 'ccmtech', 'fueltype');
+                    }]);
+                }]);
+            }])->first();
+            if($hasKatashiki && $hasKatashiki->katashikicar) {
+                $car->carid = $hasKatashiki->katashikicar?->carid;
+                $car->manuid = $hasKatashiki->katashikicar?->carengine?->manuid;
+                $car->carname = $hasKatashiki->katashikicar?->carengine?->carname;
+                $car->modelid = $hasKatashiki->katashikicar?->carengine?->modelid;
+                $car->motorcode = $hasKatashiki->katashikicar?->carengine?->carinfo?->motorcode;
+                $car->motortype = $hasKatashiki->katashikicar?->carengine?->carinfo?->motortype;
+                $car->cylinder = $hasKatashiki->katashikicar?->carengine?->carinfo?->cylinder;
+            } 
         } else {
             $hasCarvin = Carvin::where('vin', $carinfo->islandnumber)->select('carid')->first();
             if($hasCarvin) $car->carid = $hasCarvin->carid;
